@@ -5,6 +5,13 @@
 #include <stdio.h>
 #include <sqstdsystem.h>
 
+#if defined(__APPLE__) && !defined(IOS)
+#include <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#define IOS
+#endif
+#endif
+
 #ifdef SQUNICODE
 #include <wchar.h>
 #define scgetenv _wgetenv
@@ -19,6 +26,10 @@
 #define scremove remove
 #define screname rename
 #endif
+#ifdef IOS
+	#include <spawn.h>
+	extern char **environ;
+#endif
 
 static SQInteger _system_getenv(HSQUIRRELVM v)
 {
@@ -30,17 +41,21 @@ static SQInteger _system_getenv(HSQUIRRELVM v)
     return 0;
 }
 
-
 static SQInteger _system_system(HSQUIRRELVM v)
 {
     const SQChar *s;
     if(SQ_SUCCEEDED(sq_getstring(v,2,&s))){
-        sq_pushinteger(v,scsystem(s));
+	#ifdef IOS
+		pid_t pid;
+		posix_spawn(&pid, s, NULL, NULL, NULL, environ);
+		sq_pushinteger(v, 0);
+	#else
+	        sq_pushinteger(v,scsystem(s));
+	#endif
         return 1;
     }
     return sq_throwerror(v,_SC("wrong param"));
 }
-
 
 static SQInteger _system_clock(HSQUIRRELVM v)
 {
@@ -50,9 +65,8 @@ static SQInteger _system_clock(HSQUIRRELVM v)
 
 static SQInteger _system_time(HSQUIRRELVM v)
 {
-    time_t t;
-    time(&t);
-    sq_pushinteger(v,*((SQInteger *)&t));
+    SQInteger t = (SQInteger)time(NULL);
+    sq_pushinteger(v,t);
     return 1;
 }
 
@@ -119,7 +133,7 @@ static SQInteger _system_date(HSQUIRRELVM v)
 
 
 #define _DECL_FUNC(name,nparams,pmask) {_SC(#name),_system_##name,nparams,pmask}
-static SQRegFunction systemlib_funcs[]={
+static const SQRegFunction systemlib_funcs[]={
     _DECL_FUNC(getenv,2,_SC(".s")),
     _DECL_FUNC(system,2,_SC(".s")),
     _DECL_FUNC(clock,0,NULL),
@@ -127,7 +141,7 @@ static SQRegFunction systemlib_funcs[]={
     _DECL_FUNC(date,-1,_SC(".nn")),
     _DECL_FUNC(remove,2,_SC(".s")),
     _DECL_FUNC(rename,3,_SC(".ss")),
-    {0,0}
+    {NULL,(SQFUNCTION)0,0,NULL}
 };
 #undef _DECL_FUNC
 

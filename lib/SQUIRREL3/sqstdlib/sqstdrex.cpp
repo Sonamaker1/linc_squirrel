@@ -5,12 +5,6 @@
 #include <setjmp.h>
 #include <sqstdstring.h>
 
-#ifdef _UINCODE
-#define scisprint iswprint
-#else
-#define scisprint isprint
-#endif
-
 #ifdef _DEBUG
 #include <stdio.h>
 
@@ -19,7 +13,7 @@ static const SQChar *g_nnames[] =
     _SC("NONE"),_SC("OP_GREEDY"),   _SC("OP_OR"),
     _SC("OP_EXPR"),_SC("OP_NOCAPEXPR"),_SC("OP_DOT"),   _SC("OP_CLASS"),
     _SC("OP_CCLASS"),_SC("OP_NCLASS"),_SC("OP_RANGE"),_SC("OP_CHAR"),
-    _SC("OP_EOL"),_SC("OP_BOL"),_SC("OP_WB")
+    _SC("OP_EOL"),_SC("OP_BOL"),_SC("OP_WB"),_SC("OP_MB")
 };
 
 #endif
@@ -37,6 +31,7 @@ static const SQChar *g_nnames[] =
 #define OP_EOL          (MAX_CHAR+11)
 #define OP_BOL          (MAX_CHAR+12)
 #define OP_WB           (MAX_CHAR+13)
+#define OP_MB           (MAX_CHAR+14) //match balanced
 
 #define SQREX_SYMBOL_ANY_CHAR ('.')
 #define SQREX_SYMBOL_GREEDY_ONE_OR_MORE ('+')
@@ -145,6 +140,22 @@ static SQInteger sqstd_rex_charnode(SQRex *exp,SQBool isclass)
                 t = *exp->_p; exp->_p++;
                 return sqstd_rex_charclass(exp,t);
                 }
+            case 'm':
+                {
+                     SQChar cb, ce; //cb = character begin match ce = character end match
+                     cb = *++exp->_p; //skip 'm'
+                     ce = *++exp->_p;
+                     exp->_p++; //points to the next char to be parsed
+                     if ((!cb) || (!ce)) sqstd_rex_error(exp,_SC("balanced chars expected"));
+                     if ( cb == ce ) sqstd_rex_error(exp,_SC("open/close char can't be the same"));
+                     SQInteger node =  sqstd_rex_newnode(exp,OP_MB);
+                     exp->_nodes[node].left = cb;
+                     exp->_nodes[node].right = ce;
+                     return node;
+                }
+            case 0:
+                sqstd_rex_error(exp,_SC("letter expected for argument of escape sequence"));
+                break;
             case 'b':
             case 'B':
                 if(!isclass) {
@@ -205,8 +216,6 @@ static SQInteger sqstd_rex_class(SQRex *exp)
     if(first!=-1){
         SQInteger c = first;
         exp->_nodes[chain].next = c;
-        chain = c;
-        first = -1;
     }
     /* hack? */
     exp->_nodes[ret].left = exp->_nodes[ret].next;
@@ -496,23 +505,44 @@ static const SQChar *sqstd_rex_matchnode(SQRex* exp,SQRexNode *node,const SQChar
         if(str == exp->_eol) return str;
         return NULL;
     case OP_DOT:{
+        if (str == exp->_eol) return NULL;
         str++;
                 }
         return str;
     case OP_NCLASS:
     case OP_CLASS:
+        if (str == exp->_eol) return NULL;
         if(sqstd_rex_matchclass(exp,&exp->_nodes[node->left],*str)?(type == OP_CLASS?SQTrue:SQFalse):(type == OP_NCLASS?SQTrue:SQFalse)) {
             str++;
             return str;
         }
         return NULL;
     case OP_CCLASS:
+        if (str == exp->_eol) return NULL;
         if(sqstd_rex_matchcclass(node->left,*str)) {
             str++;
             return str;
         }
         return NULL;
+    case OP_MB:
+        {
+            SQInteger cb = node->left; //char that opens a balanced expression
+            if(*str != cb) return NULL; // string doesnt start with open char
+            SQInteger ce = node->right; //char that closes a balanced expression
+            SQInteger cont = 1;
+            const SQChar *streol = exp->_eol;
+            while (++str < streol) {
+              if (*str == ce) {
+                if (--cont == 0) {
+                    return ++str;
+                }
+              }
+              else if (*str == cb) cont++;
+            }
+        }
+        return NULL; // string ends out of balance
     default: /* char */
+        if (str == exp->_eol) return NULL;
         if(*str != node->type) return NULL;
         str++;
         return str;
@@ -523,7 +553,7 @@ static const SQChar *sqstd_rex_matchnode(SQRex* exp,SQRexNode *node,const SQChar
 /* public api */
 SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
 {
-    SQRex *exp = (SQRex *)sq_malloc(sizeof(SQRex));
+    SQRex * volatile exp = (SQRex *)sq_malloc(sizeof(SQRex)); // "volatile" is needed for setjmp()
     exp->_eol = exp->_bol = NULL;
     exp->_p = pattern;
     exp->_nallocated = (SQInteger)scstrlen(pattern) * sizeof(SQChar);
@@ -548,10 +578,10 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
             scprintf(_SC("\n"));
             for(i = 0;i < nsize; i++) {
                 if(exp->_nodes[i].type>MAX_CHAR)
-                    scprintf(_SC("[%02d] %10s "),i,g_nnames[exp->_nodes[i].type-MAX_CHAR]);
+                    scprintf(_SC("[%02d] %10s "), (SQInt32)i,g_nnames[exp->_nodes[i].type-MAX_CHAR]);
                 else
-                    scprintf(_SC("[%02d] %10c "),i,exp->_nodes[i].type);
-                scprintf(_SC("left %02d right %02d next %02d\n"),exp->_nodes[i].left,exp->_nodes[i].right,exp->_nodes[i].next);
+                    scprintf(_SC("[%02d] %10c "), (SQInt32)i,exp->_nodes[i].type);
+                scprintf(_SC("left %02d right %02d next %02d\n"), (SQInt32)exp->_nodes[i].left, (SQInt32)exp->_nodes[i].right, (SQInt32)exp->_nodes[i].next);
             }
             scprintf(_SC("\n"));
         }

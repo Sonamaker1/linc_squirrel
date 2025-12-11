@@ -8,15 +8,19 @@
 #define MIN_STACK_OVERHEAD 15
 
 #define SQ_SUSPEND_FLAG -666
+#define SQ_TAILCALL_FLAG -777
 #define DONT_FALL_BACK 666
-#define EXISTS_FALL_BACK -1
+//#define EXISTS_FALL_BACK -1
+
+#define GET_FLAG_RAW                0x00000001
+#define GET_FLAG_DO_NOT_RAISE_ERROR 0x00000002
 //base lib
 void sq_base_register(HSQUIRRELVM v);
 
 struct SQExceptionTrap{
     SQExceptionTrap() {}
     SQExceptionTrap(SQInteger ss, SQInteger stackbase,SQInstruction *ip, SQInteger ex_target){ _stacksize = ss; _stackbase = stackbase; _ip = ip; _extarget = ex_target;}
-    SQExceptionTrap(const SQExceptionTrap &et) { (*this) = et;    }
+    SQExceptionTrap(const SQExceptionTrap &et) { (*this) = et;  }
     SQInteger _stackbase;
     SQInteger _stacksize;
     SQInstruction *_ip;
@@ -24,9 +28,6 @@ struct SQExceptionTrap{
 };
 
 #define _INLINE
-
-#define STK(a) _stack._vals[_stackbase+(a)]
-#define TARGET _stack._vals[_stackbase+arg0]
 
 typedef sqvector<SQExceptionTrap> ExceptionsTraps;
 
@@ -56,7 +57,8 @@ public:
     bool Init(SQVM *friendvm, SQInteger stacksize);
     bool Execute(SQObjectPtr &func, SQInteger nargs, SQInteger stackbase, SQObjectPtr &outres, SQBool raiseerror, ExecutionType et = ET_CALL);
     //starts a native call return when the NATIVE closure returns
-    bool CallNative(SQNativeClosure *nclosure, SQInteger nargs, SQInteger newbase, SQObjectPtr &retval,bool &suspend);
+    bool CallNative(SQNativeClosure *nclosure, SQInteger nargs, SQInteger newbase, SQObjectPtr &retval, SQInt32 target, bool &suspend,bool &tailcall);
+	bool TailCall(SQClosure *closure, SQInteger firstparam, SQInteger nparams);
     //starts a SQUIRREL call in the same "Execution loop"
     bool StartCall(SQClosure *closure, SQInteger target, SQInteger nargs, SQInteger stackbase, bool tailcall);
     bool CreateClassInstance(SQClass *theclass, SQObjectPtr &inst, SQObjectPtr &constructor);
@@ -66,7 +68,7 @@ public:
 
     void CallDebugHook(SQInteger type,SQInteger forcedline=0);
     void CallErrorHandler(SQObjectPtr &e);
-    bool Get(const SQObjectPtr &self, const SQObjectPtr &key, SQObjectPtr &dest, bool raw, SQInteger selfidx);
+    bool Get(const SQObjectPtr &self, const SQObjectPtr &key, SQObjectPtr &dest, SQUnsignedInteger getflags, SQInteger selfidx);
     SQInteger FallBackGet(const SQObjectPtr &self,const SQObjectPtr &key,SQObjectPtr &dest);
     bool InvokeDefaultDelegate(const SQObjectPtr &self,const SQObjectPtr &key,SQObjectPtr &dest);
     bool Set(const SQObjectPtr &self, const SQObjectPtr &key, const SQObjectPtr &val, SQInteger selfidx);
@@ -101,7 +103,7 @@ public:
     _INLINE bool BW_OP(SQUnsignedInteger op,SQObjectPtr &trg,const SQObjectPtr &o1,const SQObjectPtr &o2);
     _INLINE bool NEG_OP(SQObjectPtr &trg,const SQObjectPtr &o1);
     _INLINE bool CMP_OP(CmpOP op, const SQObjectPtr &o1,const SQObjectPtr &o2,SQObjectPtr &res);
-    bool CLOSURE_OP(SQObjectPtr &target, SQFunctionProto *func);
+    bool CLOSURE_OP(SQObjectPtr &target, SQFunctionProto *func, SQInteger boundtarget);
     bool CLASS_OP(SQObjectPtr &target,SQInteger base,SQInteger attrs);
     //return true if the loop is finished
     bool FOREACH_OP(SQObjectPtr &o1,SQObjectPtr &o2,SQObjectPtr &o3,SQObjectPtr &o4,SQInteger arg_2,int exitpos,int &jump);
@@ -145,7 +147,7 @@ public:
 
     SQInteger _top;
     SQInteger _stackbase;
-    SQOuter    *_openouters;
+    SQOuter *_openouters;
     SQObjectPtr _roottable;
     SQObjectPtr _lasterror;
     SQObjectPtr _errorhandler;
@@ -164,11 +166,12 @@ public:
 
     ExceptionsTraps _etraps;
     CallInfo *ci;
-    void *_foreignptr;
+    SQUserPointer _foreignptr;
     //VMs sharing the same state
     SQSharedState *_sharedstate;
     SQInteger _nnativecalls;
     SQInteger _nmetamethodscall;
+    SQRELEASEHOOK _releasehook;
     //suspend infos
     SQBool _suspended;
     SQBool _suspended_root;

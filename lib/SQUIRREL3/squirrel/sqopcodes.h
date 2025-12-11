@@ -99,7 +99,7 @@ enum SQOpcode
     _OP_THROW=              0x39,
     _OP_NEWSLOTA=           0x3A,
     _OP_GETBASE=            0x3B,
-    _OP_CLOSE=              0x3C,
+    _OP_CLOSE=              0x3C
 };
 
 struct SQInstructionDesc {
@@ -110,7 +110,7 @@ struct SQInstruction
 {
     SQInstruction(){};
     SQInstruction(SQOpcode _op,SQInteger a0=0,SQInteger a1=0,SQInteger a2=0,SQInteger a3=0)
-    {   op = _op;
+    {   op = (unsigned char)_op;
         _arg0 = (unsigned char)a0;_arg1 = (SQInt32)a1;
         _arg2 = (unsigned char)a2;_arg3 = (unsigned char)a3;
     }

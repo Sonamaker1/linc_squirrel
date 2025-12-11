@@ -1,7 +1,9 @@
 /* see copyright notice in squirrel.h */
 #include <squirrel.h>
 #include <sqstdaux.h>
+#include <stdio.h>
 #include <assert.h>
+#include <stdarg.h>
 
 void sqstd_printcallstack(HSQUIRRELVM v)
 {
@@ -83,8 +85,9 @@ void sqstd_printcallstack(HSQUIRRELVM v)
                     pf(v,_SC("[%s] WEAKREF\n"),name);
                     break;
                 case OT_BOOL:{
-                    sq_getinteger(v,-1,&i);
-                    pf(v,_SC("[%s] %s\n"),name,i?_SC("true"):_SC("false"));
+                    SQBool bval;
+                    sq_getbool(v,-1,&bval);
+                    pf(v,_SC("[%s] %s\n"),name,bval == SQTrue ? _SC("true"):_SC("false"));
                              }
                     break;
                 default: assert(0); break;
@@ -101,11 +104,11 @@ static SQInteger _sqstd_aux_printerror(HSQUIRRELVM v)
     if(pf) {
         const SQChar *sErr = 0;
         if(sq_gettop(v)>=1) {
-            if(SQ_SUCCEEDED(sq_getstring(v,2,&sErr)))    {
-                pf(v,_SC("\nAN ERROR HAS OCCURED [%s]\n"),sErr);
+            if(SQ_SUCCEEDED(sq_getstring(v,2,&sErr)))   {
+                pf(v,_SC("\nAN ERROR HAS OCCURRED [%s]\n"),sErr);
             }
             else{
-                pf(v,_SC("\nAN ERROR HAS OCCURED [unknown]\n"));
+                pf(v,_SC("\nAN ERROR HAS OCCURRED [unknown]\n"));
             }
             sqstd_printcallstack(v);
         }
@@ -126,4 +129,23 @@ void sqstd_seterrorhandlers(HSQUIRRELVM v)
     sq_setcompilererrorhandler(v,_sqstd_compiler_error);
     sq_newclosure(v,_sqstd_aux_printerror,0);
     sq_seterrorhandler(v);
+}
+
+SQRESULT sqstd_throwerrorf(HSQUIRRELVM v,const SQChar *err,...)
+{
+    SQInteger n=256;
+    va_list args;
+begin:
+    va_start(args,err);
+    SQChar *b=sq_getscratchpad(v,n);
+    SQInteger r=scvsprintf(b,n,err,args);
+    va_end(args);
+    if (r>=n) {
+        n=r+1;//required+null
+        goto begin;
+    } else if (r<0) {
+        return sq_throwerror(v,_SC("@failed to generate formatted error message"));
+    } else {
+        return sq_throwerror(v,b);
+    }
 }

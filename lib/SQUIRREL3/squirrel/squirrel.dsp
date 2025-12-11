@@ -7,19 +7,19 @@
 CFG=squirrel - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "squirrel.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "squirrel.mak" CFG="squirrel - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "squirrel - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "squirrel - Win32 Debug" (based on "Win32 (x86) Static Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -73,7 +73,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo /out:"..\lib\squirrel.lib"
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -92,7 +92,7 @@ SOURCE=.\sqapi.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -105,7 +105,7 @@ SOURCE=.\sqbaselib.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -118,7 +118,7 @@ SOURCE=.\sqcompiler.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -131,7 +131,7 @@ SOURCE=.\sqdebug.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -144,7 +144,7 @@ SOURCE=.\sqfuncstate.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -157,7 +157,7 @@ SOURCE=.\sqlexer.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -174,7 +174,7 @@ SOURCE=.\sqobject.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -187,7 +187,7 @@ SOURCE=.\sqstate.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -200,7 +200,7 @@ SOURCE=.\sqtable.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -213,7 +213,7 @@ SOURCE=.\sqclass.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # Begin Source File
@@ -226,7 +226,7 @@ SOURCE=.\sqvm.cpp
 
 # ADD CPP /YX"stdafx.h"
 
-!ENDIF
+!ENDIF 
 
 # End Source File
 # End Group

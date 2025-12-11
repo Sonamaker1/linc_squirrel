@@ -19,11 +19,9 @@
 
 #ifdef SQUNICODE
 #define scfprintf fwprintf
-#define scfopen    _wfopen
 #define scvprintf vfwprintf
 #else
 #define scfprintf fprintf
-#define scfopen    fopen
 #define scvprintf vfprintf
 #endif
 
@@ -48,7 +46,7 @@ SQInteger quit(HSQUIRRELVM v)
     return 0;
 }
 
-void printfunc(HSQUIRRELVM v,const SQChar *s,...)
+void printfunc(HSQUIRRELVM SQ_UNUSED_ARG(v),const SQChar *s,...)
 {
     va_list vl;
     va_start(vl, s);
@@ -56,7 +54,7 @@ void printfunc(HSQUIRRELVM v,const SQChar *s,...)
     va_end(vl);
 }
 
-void errorfunc(HSQUIRRELVM v,const SQChar *s,...)
+void errorfunc(HSQUIRRELVM SQ_UNUSED_ARG(v),const SQChar *s,...)
 {
     va_list vl;
     va_start(vl, s);
@@ -89,10 +87,10 @@ int getargs(HSQUIRRELVM v,int argc, char* argv[],SQInteger *retval)
 {
     int i;
     int compiles_only = 0;
+#ifdef SQUNICODE
     static SQChar temp[500];
-    const SQChar *ret=NULL;
+#endif
     char * output = NULL;
-    int lineinfo=0;
     *retval = 0;
     if(argc>1)
     {
@@ -206,7 +204,7 @@ int getargs(HSQUIRRELVM v,int argc, char* argv[],SQInteger *retval)
 
                 }
             }
-            //if this point is reached an error occured
+            //if this point is reached an error occurred
             {
                 const SQChar *err;
                 sq_getlasterror(v);
@@ -278,7 +276,7 @@ void Interactive(HSQUIRRELVM v)
         buffer[i] = _SC('\0');
 
         if(buffer[0]==_SC('=')){
-            scsprintf(sq_getscratchpad(v,MAXINPUT),_SC("return (%s)"),&buffer[1]);
+            scsprintf(sq_getscratchpad(v,MAXINPUT),(size_t)MAXINPUT,_SC("return (%s)"),&buffer[1]);
             memcpy(buffer,sq_getscratchpad(v,-1),(scstrlen(sq_getscratchpad(v,-1))+1)*sizeof(SQChar));
             retval=1;
         }
@@ -309,7 +307,6 @@ int main(int argc, char* argv[])
 {
     HSQUIRRELVM v;
     SQInteger retval = 0;
-    const SQChar *filename=NULL;
 #if defined(_MSC_VER) && defined(_DEBUG)
     _CrtSetAllocHook(MemAllocHook);
 #endif
