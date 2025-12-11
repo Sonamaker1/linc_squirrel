@@ -38,22 +38,22 @@ enum SQMetaMethod{
     MT_LAST = 18
 };
 
-#define MM_ADD        _SC("_add")
-#define MM_SUB        _SC("_sub")
-#define MM_MUL        _SC("_mul")
-#define MM_DIV        _SC("_div")
-#define MM_UNM        _SC("_unm")
-#define MM_MODULO    _SC("_modulo")
-#define MM_SET        _SC("_set")
-#define MM_GET        _SC("_get")
-#define MM_TYPEOF    _SC("_typeof")
+#define MM_ADD      _SC("_add")
+#define MM_SUB      _SC("_sub")
+#define MM_MUL      _SC("_mul")
+#define MM_DIV      _SC("_div")
+#define MM_UNM      _SC("_unm")
+#define MM_MODULO   _SC("_modulo")
+#define MM_SET      _SC("_set")
+#define MM_GET      _SC("_get")
+#define MM_TYPEOF   _SC("_typeof")
 #define MM_NEXTI    _SC("_nexti")
-#define MM_CMP        _SC("_cmp")
-#define MM_CALL        _SC("_call")
-#define MM_CLONED    _SC("_cloned")
-#define MM_NEWSLOT    _SC("_newslot")
-#define MM_DELSLOT    _SC("_delslot")
-#define MM_TOSTRING    _SC("_tostring")
+#define MM_CMP      _SC("_cmp")
+#define MM_CALL     _SC("_call")
+#define MM_CLONED   _SC("_cloned")
+#define MM_NEWSLOT  _SC("_newslot")
+#define MM_DELSLOT  _SC("_delslot")
+#define MM_TOSTRING _SC("_tostring")
 #define MM_NEWMEMBER _SC("_newmember")
 #define MM_INHERITED _SC("_inherited")
 
@@ -92,7 +92,7 @@ struct SQRefCounted
     virtual ~SQRefCounted();
     SQWeakRef *GetWeakRef(SQObjectType type);
     virtual void Release()=0;
-    
+
 };
 
 struct SQWeakRef : SQRefCounted
@@ -105,14 +105,14 @@ struct SQWeakRef : SQRefCounted
 
 struct SQObjectPtr;
 
-#define __AddRef(type,unval) if(ISREFCOUNTED(type))    \
+#define __AddRef(type,unval) if(ISREFCOUNTED(type)) \
         { \
             unval.pRefCounted->_uiRef++; \
-        }  
+        }
 
-#define __Release(type,unval) if(ISREFCOUNTED(type) && ((--unval.pRefCounted->_uiRef)==0))    \
-        {    \
-            unval.pRefCounted->Release();    \
+#define __Release(type,unval) if(ISREFCOUNTED(type) && ((--unval.pRefCounted->_uiRef)==0))  \
+        {   \
+            unval.pRefCounted->Release();   \
         }
 
 #define __ObjRelease(obj) { \
@@ -120,7 +120,7 @@ struct SQObjectPtr;
         (obj)->_uiRef--; \
         if((obj)->_uiRef == 0) \
             (obj)->Release(); \
-        (obj) = NULL;    \
+        (obj) = NULL;   \
     } \
 }
 
@@ -160,7 +160,7 @@ struct SQObjectPtr;
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 #if defined(SQUSEDOUBLE) && !defined(_SQ64) || !defined(SQUSEDOUBLE) && defined(_SQ64)
-#define SQ_REFOBJECT_INIT()    SQ_OBJECT_RAWINIT()
+#define SQ_REFOBJECT_INIT() SQ_OBJECT_RAWINIT()
 #else
 #define SQ_REFOBJECT_INIT()
 #endif
@@ -236,7 +236,7 @@ struct SQObjectPtr : public SQObject
     _REF_TYPE_DECL(OT_WEAKREF,SQWeakRef,pWeakRef)
     _REF_TYPE_DECL(OT_THREAD,SQVM,pThread)
     _REF_TYPE_DECL(OT_FUNCPROTO,SQFunctionProto,pFunctionProto)
-    
+
     _SCALAR_TYPE_DECL(OT_INTEGER,SQInteger,nInteger)
     _SCALAR_TYPE_DECL(OT_FLOAT,SQFloat,fFloat)
     _SCALAR_TYPE_DECL(OT_USERPOINTER,SQUserPointer,pUserPointer)
@@ -248,7 +248,7 @@ struct SQObjectPtr : public SQObject
         _unVal.nInteger = bBool?1:0;
     }
     inline SQObjectPtr& operator=(bool b)
-    { 
+    {
         __Release(_type,_unVal);
         SQ_OBJECT_RAWINIT()
         _type = OT_BOOL;
@@ -260,9 +260,9 @@ struct SQObjectPtr : public SQObject
     {
         __Release(_type,_unVal);
     }
-            
+
     inline SQObjectPtr& operator=(const SQObjectPtr& obj)
-    { 
+    {
         SQObjectType tOldType;
         SQObjectValue unOldVal;
         tOldType=_type;
@@ -274,7 +274,7 @@ struct SQObjectPtr : public SQObject
         return *this;
     }
     inline SQObjectPtr& operator=(const SQObject& obj)
-    { 
+    {
         SQObjectType tOldType;
         SQObjectValue unOldVal;
         tOldType=_type;

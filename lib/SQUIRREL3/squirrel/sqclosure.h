@@ -31,7 +31,7 @@ public:
         this->~SQClosure();
         sq_vm_free(this,size);
     }
-    
+
     SQClosure *Clone()
     {
         SQFunctionProto *f = _function;
@@ -43,7 +43,7 @@ public:
         return ret;
     }
     ~SQClosure();
-    
+
     bool Save(SQVM *v,SQUserPointer up,SQWRITEFUNC write);
     static bool Load(SQVM *v,SQUserPointer up,SQREADFUNC read,SQObjectPtr &ret);
 #ifndef NO_GARBAGE_COLLECTOR
@@ -83,7 +83,7 @@ public:
         this->~SQOuter();
         sq_vm_free(this,sizeof(SQOuter));
     }
-    
+
 #ifndef NO_GARBAGE_COLLECTOR
     void Mark(SQCollectable **chain);
     void Finalize() { _value.Null(); }
@@ -97,7 +97,7 @@ public:
 };
 
 //////////////////////////////////////////////
-struct SQGenerator : public CHAINABLE_OBJ 
+struct SQGenerator : public CHAINABLE_OBJ
 {
     enum SQGeneratorState{eRunning,eSuspended,eDead};
 private:
@@ -119,7 +119,7 @@ public:
     void Release(){
         sq_delete(this,SQGenerator);
     }
-    
+
     bool Yield(SQVM *v,SQInteger target);
     bool Resume(SQVM *v,SQObjectPtr &dest);
 #ifndef NO_GARBAGE_COLLECTOR
@@ -173,7 +173,7 @@ public:
         this->~SQNativeClosure();
         sq_free(this,size);
     }
-    
+
 #ifndef NO_GARBAGE_COLLECTOR
     void Mark(SQCollectable **chain);
     void Finalize() { _NULL_SQOBJECT_VECTOR(_outervalues,_noutervalues); }

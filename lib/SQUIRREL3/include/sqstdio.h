@@ -7,14 +7,14 @@
 #define SQSTD_STREAM_TYPE_TAG 0x80000000
 
 struct SQStream {
-	virtual SQInteger Read(void *buffer, SQInteger size) = 0;
-	virtual SQInteger Write(void *buffer, SQInteger size) = 0;
-	virtual SQInteger Flush() = 0;
-	virtual SQInteger Tell() = 0;
-	virtual SQInteger Len() = 0;
-	virtual SQInteger Seek(SQInteger offset, SQInteger origin) = 0;
-	virtual bool IsValid() = 0;
-	virtual bool EOS() = 0;
+    virtual SQInteger Read(void *buffer, SQInteger size) = 0;
+    virtual SQInteger Write(void *buffer, SQInteger size) = 0;
+    virtual SQInteger Flush() = 0;
+    virtual SQInteger Tell() = 0;
+    virtual SQInteger Len() = 0;
+    virtual SQInteger Seek(SQInteger offset, SQInteger origin) = 0;
+    virtual bool IsValid() = 0;
+    virtual bool EOS() = 0;
 };
 
 extern "C" {

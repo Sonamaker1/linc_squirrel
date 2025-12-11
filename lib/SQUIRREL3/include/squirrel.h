@@ -47,9 +47,9 @@ typedef long long SQInteger;
 typedef unsigned long long SQUnsignedInteger;
 typedef unsigned long long SQHash; /*should be the same size of a pointer*/
 #endif
-typedef int SQInt32; 
+typedef int SQInt32;
 typedef unsigned int SQUnsignedInteger32;
-#else 
+#else
 typedef int SQInteger;
 typedef int SQInt32; /*must be 32 bits(also on 64bits processors)*/
 typedef unsigned int SQUnsignedInteger32; /*must be 32 bits(also on 64bits processors)*/
@@ -88,8 +88,8 @@ typedef void* SQUserPointer;
 typedef SQUnsignedInteger SQBool;
 typedef SQInteger SQRESULT;
 
-#define SQTrue	(1)
-#define SQFalse	(0)
+#define SQTrue  (1)
+#define SQFalse (0)
 
 struct SQVM;
 struct SQTable;
@@ -123,54 +123,54 @@ typedef unsigned short wchar_t;
 
 typedef wchar_t SQChar;
 #define _SC(a) L##a
-#define	scstrcmp	wcscmp
-#define scsprintf	swprintf
-#define scstrlen	wcslen
-#define scstrtod	wcstod
+#define    scstrcmp    wcscmp
+#define scsprintf    swprintf
+#define scstrlen    wcslen
+#define scstrtod    wcstod
 #ifdef _SQ64
-#define scstrtol	_wcstoi64
+#define scstrtol    _wcstoi64
 #else
-#define scstrtol	wcstol
+#define scstrtol    wcstol
 #endif
-#define scatoi		_wtoi
-#define scstrtoul	wcstoul
-#define scvsprintf	vswprintf
-#define scstrstr	wcsstr
-#define scisspace	iswspace
-#define scisdigit	iswdigit
-#define scisxdigit	iswxdigit
-#define scisalpha	iswalpha
-#define sciscntrl	iswcntrl
-#define scisalnum	iswalnum
-#define scprintf	wprintf
+#define scatoi        _wtoi
+#define scstrtoul    wcstoul
+#define scvsprintf    vswprintf
+#define scstrstr    wcsstr
+#define scisspace    iswspace
+#define scisdigit    iswdigit
+#define scisxdigit    iswxdigit
+#define scisalpha    iswalpha
+#define sciscntrl    iswcntrl
+#define scisalnum    iswalnum
+#define scprintf    wprintf
 #define MAX_CHAR 0xFFFF
 #else
 typedef char SQChar;
 #define _SC(a) a
-#define	scstrcmp	strcmp
-#define scsprintf	sprintf
-#define scstrlen	strlen
-#define scstrtod	strtod
+#define    scstrcmp    strcmp
+#define scsprintf    sprintf
+#define scstrlen    strlen
+#define scstrtod    strtod
 #ifdef _SQ64
 #ifdef _MSC_VER
-#define scstrtol	_strtoi64
+#define scstrtol    _strtoi64
 #else
-#define scstrtol	strtoll
+#define scstrtol    strtoll
 #endif
 #else
-#define scstrtol	strtol
+#define scstrtol    strtol
 #endif
-#define scatoi		atoi
-#define scstrtoul	strtoul
-#define scvsprintf	vsnprintf
-#define scstrstr	strstr
-#define scisspace	isspace
-#define scisdigit	isdigit
-#define scisxdigit	isxdigit
-#define sciscntrl	iscntrl
-#define scisalpha	isalpha
-#define scisalnum	isalnum
-#define scprintf	printf
+#define scatoi        atoi
+#define scstrtoul    strtoul
+#define scvsprintf    vsnprintf
+#define scstrstr    strstr
+#define scisspace    isspace
+#define scisdigit    isdigit
+#define scisxdigit    isxdigit
+#define sciscntrl    iscntrl
+#define scisalpha    isalpha
+#define scisalnum    isalnum
+#define scprintf    printf
 #define MAX_CHAR 0xFF
 #endif
 
@@ -181,66 +181,66 @@ typedef char SQChar;
 #define _PRINT_INT_FMT _SC("%d")
 #endif
 
-#define SQUIRREL_VERSION	_SC("Squirrel 3.0.7 stable")
-#define SQUIRREL_COPYRIGHT	_SC("Copyright (C) 2003-2015 Alberto Demichelis")
-#define SQUIRREL_AUTHOR		_SC("Alberto Demichelis")
-#define SQUIRREL_VERSION_NUMBER	307
+#define SQUIRREL_VERSION    _SC("Squirrel 3.0.7 stable")
+#define SQUIRREL_COPYRIGHT  _SC("Copyright (C) 2003-2015 Alberto Demichelis")
+#define SQUIRREL_AUTHOR     _SC("Alberto Demichelis")
+#define SQUIRREL_VERSION_NUMBER 307
 
-#define SQ_VMSTATE_IDLE			0
-#define SQ_VMSTATE_RUNNING		1
-#define SQ_VMSTATE_SUSPENDED	2
+#define SQ_VMSTATE_IDLE         0
+#define SQ_VMSTATE_RUNNING      1
+#define SQ_VMSTATE_SUSPENDED    2
 
 #define SQUIRREL_EOB 0
-#define SQ_BYTECODE_STREAM_TAG	0xFAFA
+#define SQ_BYTECODE_STREAM_TAG  0xFAFA
 
-#define SQOBJECT_REF_COUNTED	0x08000000
-#define SQOBJECT_NUMERIC		0x04000000
-#define SQOBJECT_DELEGABLE		0x02000000
-#define SQOBJECT_CANBEFALSE		0x01000000
+#define SQOBJECT_REF_COUNTED    0x08000000
+#define SQOBJECT_NUMERIC        0x04000000
+#define SQOBJECT_DELEGABLE      0x02000000
+#define SQOBJECT_CANBEFALSE     0x01000000
 
 #define SQ_MATCHTYPEMASKSTRING (-99999)
 
 #define _RT_MASK 0x00FFFFFF
 #define _RAW_TYPE(type) (type&_RT_MASK)
 
-#define _RT_NULL			0x00000001
-#define _RT_INTEGER			0x00000002
-#define _RT_FLOAT			0x00000004
-#define _RT_BOOL			0x00000008
-#define _RT_STRING			0x00000010
-#define _RT_TABLE			0x00000020
-#define _RT_ARRAY			0x00000040
-#define _RT_USERDATA		0x00000080
-#define _RT_CLOSURE			0x00000100
-#define _RT_NATIVECLOSURE	0x00000200
-#define _RT_GENERATOR		0x00000400
-#define _RT_USERPOINTER		0x00000800
-#define _RT_THREAD			0x00001000
-#define _RT_FUNCPROTO		0x00002000
-#define _RT_CLASS			0x00004000
-#define _RT_INSTANCE		0x00008000
-#define _RT_WEAKREF			0x00010000
-#define _RT_OUTER			0x00020000
+#define _RT_NULL            0x00000001
+#define _RT_INTEGER         0x00000002
+#define _RT_FLOAT           0x00000004
+#define _RT_BOOL            0x00000008
+#define _RT_STRING          0x00000010
+#define _RT_TABLE           0x00000020
+#define _RT_ARRAY           0x00000040
+#define _RT_USERDATA        0x00000080
+#define _RT_CLOSURE         0x00000100
+#define _RT_NATIVECLOSURE   0x00000200
+#define _RT_GENERATOR       0x00000400
+#define _RT_USERPOINTER     0x00000800
+#define _RT_THREAD          0x00001000
+#define _RT_FUNCPROTO       0x00002000
+#define _RT_CLASS           0x00004000
+#define _RT_INSTANCE        0x00008000
+#define _RT_WEAKREF         0x00010000
+#define _RT_OUTER           0x00020000
 
 typedef enum tagSQObjectType{
-	OT_NULL =			(_RT_NULL|SQOBJECT_CANBEFALSE),
-	OT_INTEGER =		(_RT_INTEGER|SQOBJECT_NUMERIC|SQOBJECT_CANBEFALSE),
-	OT_FLOAT =			(_RT_FLOAT|SQOBJECT_NUMERIC|SQOBJECT_CANBEFALSE),
-	OT_BOOL =			(_RT_BOOL|SQOBJECT_CANBEFALSE),
-	OT_STRING =			(_RT_STRING|SQOBJECT_REF_COUNTED),
-	OT_TABLE =			(_RT_TABLE|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
-	OT_ARRAY =			(_RT_ARRAY|SQOBJECT_REF_COUNTED),
-	OT_USERDATA =		(_RT_USERDATA|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
-	OT_CLOSURE =		(_RT_CLOSURE|SQOBJECT_REF_COUNTED),
-	OT_NATIVECLOSURE =	(_RT_NATIVECLOSURE|SQOBJECT_REF_COUNTED),
-	OT_GENERATOR =		(_RT_GENERATOR|SQOBJECT_REF_COUNTED),
-	OT_USERPOINTER =	_RT_USERPOINTER,
-	OT_THREAD =			(_RT_THREAD|SQOBJECT_REF_COUNTED) ,
-	OT_FUNCPROTO =		(_RT_FUNCPROTO|SQOBJECT_REF_COUNTED), //internal usage only
-	OT_CLASS =			(_RT_CLASS|SQOBJECT_REF_COUNTED),
-	OT_INSTANCE =		(_RT_INSTANCE|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
-	OT_WEAKREF =		(_RT_WEAKREF|SQOBJECT_REF_COUNTED),
-	OT_OUTER =			(_RT_OUTER|SQOBJECT_REF_COUNTED) //internal usage only
+    OT_NULL =           (_RT_NULL|SQOBJECT_CANBEFALSE),
+    OT_INTEGER =        (_RT_INTEGER|SQOBJECT_NUMERIC|SQOBJECT_CANBEFALSE),
+    OT_FLOAT =          (_RT_FLOAT|SQOBJECT_NUMERIC|SQOBJECT_CANBEFALSE),
+    OT_BOOL =           (_RT_BOOL|SQOBJECT_CANBEFALSE),
+    OT_STRING =         (_RT_STRING|SQOBJECT_REF_COUNTED),
+    OT_TABLE =          (_RT_TABLE|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
+    OT_ARRAY =          (_RT_ARRAY|SQOBJECT_REF_COUNTED),
+    OT_USERDATA =       (_RT_USERDATA|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
+    OT_CLOSURE =        (_RT_CLOSURE|SQOBJECT_REF_COUNTED),
+    OT_NATIVECLOSURE =  (_RT_NATIVECLOSURE|SQOBJECT_REF_COUNTED),
+    OT_GENERATOR =      (_RT_GENERATOR|SQOBJECT_REF_COUNTED),
+    OT_USERPOINTER =    _RT_USERPOINTER,
+    OT_THREAD =         (_RT_THREAD|SQOBJECT_REF_COUNTED) ,
+    OT_FUNCPROTO =      (_RT_FUNCPROTO|SQOBJECT_REF_COUNTED), //internal usage only
+    OT_CLASS =          (_RT_CLASS|SQOBJECT_REF_COUNTED),
+    OT_INSTANCE =       (_RT_INSTANCE|SQOBJECT_REF_COUNTED|SQOBJECT_DELEGABLE),
+    OT_WEAKREF =        (_RT_WEAKREF|SQOBJECT_REF_COUNTED),
+    OT_OUTER =          (_RT_OUTER|SQOBJECT_REF_COUNTED) //internal usage only
 }SQObjectType;
 
 #define ISREFCOUNTED(t) (t&SQOBJECT_REF_COUNTED)
@@ -248,43 +248,43 @@ typedef enum tagSQObjectType{
 
 typedef union tagSQObjectValue
 {
-	struct SQTable *pTable;
-	struct SQArray *pArray;
-	struct SQClosure *pClosure;
-	struct SQOuter *pOuter;
-	struct SQGenerator *pGenerator;
-	struct SQNativeClosure *pNativeClosure;
-	struct SQString *pString;
-	struct SQUserData *pUserData;
-	SQInteger nInteger;
-	SQFloat fFloat;
-	SQUserPointer pUserPointer;
-	struct SQFunctionProto *pFunctionProto;
-	struct SQRefCounted *pRefCounted;
-	struct SQDelegable *pDelegable;
-	struct SQVM *pThread;
-	struct SQClass *pClass;
-	struct SQInstance *pInstance;
-	struct SQWeakRef *pWeakRef;
-	SQRawObjectVal raw;
+    struct SQTable *pTable;
+    struct SQArray *pArray;
+    struct SQClosure *pClosure;
+    struct SQOuter *pOuter;
+    struct SQGenerator *pGenerator;
+    struct SQNativeClosure *pNativeClosure;
+    struct SQString *pString;
+    struct SQUserData *pUserData;
+    SQInteger nInteger;
+    SQFloat fFloat;
+    SQUserPointer pUserPointer;
+    struct SQFunctionProto *pFunctionProto;
+    struct SQRefCounted *pRefCounted;
+    struct SQDelegable *pDelegable;
+    struct SQVM *pThread;
+    struct SQClass *pClass;
+    struct SQInstance *pInstance;
+    struct SQWeakRef *pWeakRef;
+    SQRawObjectVal raw;
 }SQObjectValue;
 
 
 typedef struct tagSQObject
 {
-	SQObjectType _type;
-	SQObjectValue _unVal;
+    SQObjectType _type;
+    SQObjectValue _unVal;
 }SQObject;
 
 typedef struct  tagSQMemberHandle{
-	SQBool _static;
-	SQInteger _index;
+    SQBool _static;
+    SQInteger _index;
 }SQMemberHandle;
 
 typedef struct tagSQStackInfos{
-	const SQChar* funcname;
-	const SQChar* source;
-	SQInteger line;
+    const SQChar* funcname;
+    const SQChar* source;
+    SQInteger line;
 }SQStackInfos;
 
 typedef struct SQVM* HSQUIRRELVM;
@@ -301,16 +301,16 @@ typedef SQInteger (*SQREADFUNC)(SQUserPointer,SQUserPointer,SQInteger);
 typedef SQInteger (*SQLEXREADFUNC)(SQUserPointer);
 
 typedef struct tagSQRegFunction{
-	const SQChar *name;
-	SQFUNCTION f;
-	SQInteger nparamscheck;
-	const SQChar *typemask;
+    const SQChar *name;
+    SQFUNCTION f;
+    SQInteger nparamscheck;
+    const SQChar *typemask;
 }SQRegFunction;
 
 typedef struct tagSQFunctionInfo {
-	SQUserPointer funcid;
-	const SQChar *name;
-	const SQChar *source;
+    SQUserPointer funcid;
+    const SQChar *name;
+    const SQChar *source;
 }SQFunctionInfo;
 
 /*vm*/
@@ -413,9 +413,9 @@ SQUIRREL_API SQRESULT sq_rawdeleteslot(HSQUIRRELVM v,SQInteger idx,SQBool pushva
 SQUIRREL_API SQRESULT sq_newmember(HSQUIRRELVM v,SQInteger idx,SQBool bstatic);
 SQUIRREL_API SQRESULT sq_rawnewmember(HSQUIRRELVM v,SQInteger idx,SQBool bstatic);
 SQUIRREL_API SQRESULT sq_arrayappend(HSQUIRRELVM v,SQInteger idx);
-SQUIRREL_API SQRESULT sq_arraypop(HSQUIRRELVM v,SQInteger idx,SQBool pushval); 
-SQUIRREL_API SQRESULT sq_arrayresize(HSQUIRRELVM v,SQInteger idx,SQInteger newsize); 
-SQUIRREL_API SQRESULT sq_arrayreverse(HSQUIRRELVM v,SQInteger idx); 
+SQUIRREL_API SQRESULT sq_arraypop(HSQUIRRELVM v,SQInteger idx,SQBool pushval);
+SQUIRREL_API SQRESULT sq_arrayresize(HSQUIRRELVM v,SQInteger idx,SQInteger newsize);
+SQUIRREL_API SQRESULT sq_arrayreverse(HSQUIRRELVM v,SQInteger idx);
 SQUIRREL_API SQRESULT sq_arrayremove(HSQUIRRELVM v,SQInteger idx,SQInteger itemidx);
 SQUIRREL_API SQRESULT sq_arrayinsert(HSQUIRRELVM v,SQInteger idx,SQInteger destpos);
 SQUIRREL_API SQRESULT sq_setdelegate(HSQUIRRELVM v,SQInteger idx);

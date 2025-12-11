@@ -11,7 +11,7 @@ enum SQOuterType {
 
 struct SQOuterVar
 {
-    
+
     SQOuterVar(){}
     SQOuterVar(const SQObjectPtr &name,const SQObjectPtr &src,SQOuterType t)
     {
@@ -64,7 +64,7 @@ struct SQFunctionProto : public CHAINABLE_OBJ
 private:
     SQFunctionProto(SQSharedState *ss);
     ~SQFunctionProto();
-    
+
 public:
     static SQFunctionProto *Create(SQSharedState *ss,SQInteger ninstructions,
         SQInteger nliterals,SQInteger nparameters,
@@ -99,7 +99,7 @@ public:
         _CONSTRUCT_VECTOR(SQLocalVarInfo,f->_nlocalvarinfos,f->_localvarinfos);
         return f;
     }
-    void Release(){ 
+    void Release(){
         _DESTRUCT_VECTOR(SQObjectPtr,_nliterals,_literals);
         _DESTRUCT_VECTOR(SQObjectPtr,_nparameters,_parameters);
         _DESTRUCT_VECTOR(SQObjectPtr,_nfunctions,_functions);
@@ -110,7 +110,7 @@ public:
         this->~SQFunctionProto();
         sq_vm_free(this,size);
     }
-    
+
     const SQChar* GetLocal(SQVM *v,SQUnsignedInteger stackbase,SQUnsignedInteger nseq,SQUnsignedInteger nop);
     SQInteger GetLine(SQInstruction *curr);
     bool Save(SQVM *v,SQUserPointer up,SQWRITEFUNC write);
@@ -137,7 +137,7 @@ public:
 
     SQInteger _nparameters;
     SQObjectPtr *_parameters;
-    
+
     SQInteger _nfunctions;
     SQObjectPtr *_functions;
 
@@ -146,7 +146,7 @@ public:
 
     SQInteger _ndefaultparams;
     SQInteger *_defaultparams;
-    
+
     SQInteger _ninstructions;
     SQInstruction _instructions[1];
 };

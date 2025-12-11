@@ -68,6 +68,7 @@ extern class SQ {
     @:native('linc::squirrel::setprintfunc')
     static function _setprintfunc(v:HSQUIRRELVM, f:cpp.Callable<String->Int>) : Void;
 
+	
     static inline function setprintfunc(v:HSQUIRRELVM) : Void {
         _setprintfunc(v, cpp.Callable.fromStaticFunction(SQ_helper.print_function));
     }

@@ -5,7 +5,7 @@
 #ifdef SQUNICODE
 typedef SQChar LexChar;
 #else
-typedef    unsigned char LexChar;
+typedef unsigned char LexChar;
 #endif
 
 struct SQLexer

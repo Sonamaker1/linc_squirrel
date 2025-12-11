@@ -3,23 +3,23 @@ Squirrel 3.0 stable
 What is in this distribution?
 
 squirrel
-	static library implementing the compiler and interpreter of the language
+    static library implementing the compiler and interpreter of the language
 
 sqstdlib
-	the standard utility libraries
-	
+    the standard utility libraries
+
 sq
-	stand alone interpreter
+    stand alone interpreter
 
 doc
-	The manual
-	
+    The manual
+
 etc
-	a minimalistic embedding sample	
+    a minimalistic embedding sample
 
 samples
-	samples programs
-	
+    samples programs
+
 
 HOW TO COMPILE
 ---------------------------------------------------------
