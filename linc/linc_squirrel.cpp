@@ -82,8 +82,10 @@ namespace linc {
         }
 
         Dynamic getclosureinfo(HSQUIRRELVM v, SQInteger idx) {
-            SQUnsignedInteger nparams;
-            SQUnsignedInteger nfreevars;
+            //~ SQUnsignedInteger nparams;
+            //~ SQUnsignedInteger nfreevars;
+            SQInteger nparams;
+            SQInteger nfreevars;
             sq_getclosureinfo(v, idx, &nparams, &nfreevars);
 
             hx::Anon out = hx::Anon_obj::Create();
