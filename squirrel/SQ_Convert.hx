@@ -32,9 +32,9 @@ class SQ_Convert{
             case Type.ValueType.TFunction:
                 // trace("TFunction");
                 return false;
-            case Type.ValueType.TEnum:
-                // trace("TEnum");
-                return false;
+//~            case Type.ValueType.TEnum:
+                //~ trace("TEnum");
+//~                return false;
             default:
                 return false;
                 // trace("haxe value not supported\n");

@@ -1,6 +1,17 @@
 package squirrel;
 
 import squirrel.SQVM;
+#if cpp
+import cpp.Callable as CppCallable;
+#else
+class CppCallable<T>{
+	function new(){}
+	
+	inline public static function fromStaticFunction<T>(inStaticFunction:T):CppCallable<T>
+		return new CppCallable<T>();
+}
+#end
+
 
 @:keep
 @:include('linc_squirrel.h')
@@ -8,6 +19,8 @@ import squirrel.SQVM;
 @:build(linc.Linc.touch())
 @:build(linc.Linc.xml('squirrel'))
 #end
+
+
 extern class SQ {
 
 // Squirrel API
@@ -33,7 +46,11 @@ extern class SQ {
     // static function getprintfunc(v:HSQUIRRELVM) : SQPRINTFUNCTION;
 
     @:native('sq_getversion')
-    static function getversion() : Int;
+    private static function i_getversion() : Int;
+
+    static inline function getversion() : Int {
+       return Std.int(i_getversion());
+    }
 
     @:native('sq_getvmstate')
     static function getvmstate(v:HSQUIRRELVM) : Int;
@@ -66,11 +83,11 @@ extern class SQ {
     static function setforeignptr(v:HSQUIRRELVM, p:SQUserPointer) : Void;
 
     @:native('linc::squirrel::setprintfunc')
-    static function _setprintfunc(v:HSQUIRRELVM, f:cpp.Callable<String->Int>) : Void;
+    static function _setprintfunc(v:HSQUIRRELVM, f:CppCallable<String->Int>) : Void;
 
 	
     static inline function setprintfunc(v:HSQUIRRELVM) : Void {
-        _setprintfunc(v, cpp.Callable.fromStaticFunction(SQ_helper.print_function));
+        _setprintfunc(v, CppCallable.fromStaticFunction(SQ_helper.print_function));
     }
 
     @:native('sq_setroottable')

@@ -1,16 +1,10 @@
-#ifndef STATIC_LINK
-#define IMPLEMENT_API
-#endif
-
-#define SQUSEDOUBLE
-
-#if defined(HX_WINDOWS) || defined(HX_MACOS) || defined(HX_LINUX)
-#define NEKO_COMPATIBLE
-#endif
-
 #include <hxcpp.h>
 
 #include "./linc_squirrel.h"
+#include <string>
+#include <vector>
+#include <cstdarg>
+#include <cstdio>
 
 namespace linc {
 
